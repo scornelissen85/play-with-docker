@@ -374,6 +374,14 @@ func (d *docker) ContainerCreate(opts CreateContainerOpts) (err error) {
 				d.c.VolumeRemove(context.Background(), opts.SessionId, true)
 			}
 		}()
+	} else {
+		_, err = d.c.VolumeCreate(context.Background(), volume.VolumesCreateBody{
+			Driver: "local",
+		})
+		if err != nil {
+			return
+		}
+		h.Binds = []string{"/sys/fs/cgroup:/sys/fs/cgroup"}
 	}
 
 	container, err := d.c.ContainerCreate(context.Background(), cf, h, networkConf, opts.ContainerName)
