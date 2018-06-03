@@ -89,7 +89,7 @@ func (s *scheduler) updatePlaygrounds() {
 
 func (s *scheduler) schedulePlaygroundsUpdate() {
 	s.updatePlaygrounds()
-	s.ticker = time.NewTicker(time.Minute * 5)
+	s.ticker = time.NewTicker(time.Second * 30)
 	go func() {
 		for range s.ticker.C {
 			s.updatePlaygrounds()
