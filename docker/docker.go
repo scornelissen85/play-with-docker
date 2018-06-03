@@ -55,6 +55,7 @@ type DockerApi interface {
 	Exec(instanceName string, command []string) (int, error)
 
 	CreateAttachConnection(name string) (net.Conn, error)
+	CreateExecAttachConnection(name string, command []string) (net.Conn, error)
 	CopyToContainer(containerName, destination, fileName string, content io.Reader) error
 	CopyFromContainer(containerName, filePath string) (io.Reader, error)
 	SwarmInit(advertiseAddr string) (*SwarmTokens, error)
@@ -206,6 +207,23 @@ func (d *docker) CreateAttachConnection(name string) (net.Conn, error) {
 
 	conf := types.ContainerAttachOptions{true, true, true, true, "ctrl-^,ctrl-^", true}
 	conn, err := d.c.ContainerAttach(ctx, name, conf)
+	if err != nil {
+		return nil, err
+	}
+
+	return conn.Conn, nil
+}
+
+func (d *docker) CreateExecAttachConnection(name string, command []string) (net.Conn, error) {
+	ctx := context.Background()
+
+	conf := types.ExecConfig{Cmd: command, AttachStdin: true, AttachStdout: true, AttachStderr: true, Tty: true, Detach: false}
+	response, err := d.c.ContainerExecCreate(ctx, name, conf)
+	if err != nil {
+		return nil, err
+	}
+
+	conn, err := d.c.ContainerExecAttach(ctx, response.ID, conf)
 	if err != nil {
 		return nil, err
 	}

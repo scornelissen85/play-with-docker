@@ -205,7 +205,9 @@ func (d *DinD) InstanceGetTerminal(instance *types.Instance) (net.Conn, error) {
 	if err != nil {
 		return nil, err
 	}
-	return dockerClient.CreateAttachConnection(instance.Name)
+	log.Println(">> InstanceGetTerminal")
+	return dockerClient.CreateExecAttachConnection(instance.Name, []string{"/bin/bash", "-l"})
+	//return dockerClient.CreateAttachConnection(instance.Name)
 }
 
 func (d *DinD) InstanceUploadFromUrl(instance *types.Instance, fileName, dest, url string) error {
