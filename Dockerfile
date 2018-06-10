@@ -6,6 +6,8 @@ WORKDIR /go/src/github.com/play-with-docker/play-with-docker
 
 RUN ssh-keygen -N "" -t rsa -f /etc/ssh/ssh_host_rsa_key >/dev/null
 
+RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh; dep ensure -v
+
 RUN CGO_ENABLED=0 go build -a -installsuffix nocgo -o /go/bin/play-with-docker .
 
 
