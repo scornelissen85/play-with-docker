@@ -130,7 +130,7 @@ func proxyHost(r *http.Request) (*url.URL, error) {
 	}
 	u := new(url.URL)
 	*u = *r.URL
-	u.Host = fmt.Sprintf("%s:8443", r.Header.Get("X-Proxy-Host"))
+	u.Host = fmt.Sprintf("%s:443", r.Header.Get("X-Proxy-Host"))
 	return u, nil
 }
 

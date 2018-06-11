@@ -34,6 +34,7 @@ func main() {
 
 	tasks := []scheduler.Task{
 		task.NewCheckPorts(e, df),
+		task.NewCheckSystemPorts(e, df, s),
 		task.NewCheckSwarmPorts(e, df),
 		task.NewCheckSwarmStatus(e, df),
 		task.NewCollectStats(e, df, s),
